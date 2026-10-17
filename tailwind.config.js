@@ -1,0 +1,85 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        ivory: {
+          DEFAULT: '#F6F4EC',
+          50: '#FCFBF8',
+          100: '#FAF8F3',
+          200: '#F6F4EC',
+          300: '#EDE9DC',
+          400: '#E2DDD1',
+          500: '#D5CFC1',
+        },
+        forest: {
+          DEFAULT: '#245744',
+          50: '#F2F7F4',
+          100: '#E4EFEA',
+          200: '#C7DFD4',
+          300: '#9EBFB0',
+          400: '#5E947D',
+          500: '#3A745C',
+          600: '#2E6750',
+          700: '#245744',
+          800: '#1C4535',
+          900: '#153428',
+          950: '#0B1E16',
+        },
+        charcoal: {
+          DEFAULT: '#292F2A',
+          50: '#F5F6F5',
+          100: '#E7E9E7',
+          200: '#CED2CF',
+          300: '#ACB2AD',
+          400: '#7E8780',
+          500: '#5B645D',
+          600: '#434A44',
+          700: '#343B35',
+          800: '#292F2A',
+          900: '#1E231F',
+          950: '#131613',
+        },
+        terracotta: {
+          DEFAULT: '#D98555',
+          50: '#FCF6F2',
+          100: '#FAEDE5',
+          200: '#F4D8C8',
+          300: '#ECBEA5',
+          400: '#E39E79',
+          500: '#D98555',
+          600: '#C46B39',
+          700: '#A35328',
+          800: '#834221',
+          900: '#6A371C',
+        },
+        sage: {
+          DEFAULT: '#527263',
+          50: '#F3F6F4',
+          100: '#E5ECE8',
+          200: '#CBD8D1',
+          300: '#A4BCB1',
+          400: '#77998B',
+          500: '#527263',
+          600: '#3F594D',
+          700: '#32463D',
+        }
+      },
+      fontFamily: {
+        sans: ['Plus Jakarta Sans', 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Newsreader', 'Fraunces', 'Georgia', 'serif'],
+      },
+      boxShadow: {
+        'xs': '0 1px 2px 0 rgba(41, 47, 42, 0.05)',
+        'subtle': '0 1px 3px 0 rgba(41, 47, 42, 0.05), 0 1px 2px -1px rgba(41, 47, 42, 0.05)',
+        'warm': '0 4px 14px 0 rgba(41, 47, 42, 0.07)',
+        'lifted': '0 10px 25px -3px rgba(41, 47, 42, 0.09), 0 4px 6px -4px rgba(41, 47, 42, 0.04)',
+      }
+    },
+  },
+  plugins: [],
+}

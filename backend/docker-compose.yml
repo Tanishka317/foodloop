@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: foodloop-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: foodloop_db
+      POSTGRES_USER: foodloop_user
+      POSTGRES_PASSWORD: local_dev_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - foodloop_db_data:/var/lib/postgresql/data
+
+volumes:
+  foodloop_db_data:

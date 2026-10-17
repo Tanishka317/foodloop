@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-ivory: #F6F4EC;
+    --text-charcoal: #292F2A;
+    --primary-forest: #245744;
+    --accent-terracotta: #D98555;
+  }
+
+  body {
+    background-color: #F6F4EC;
+    color: #292F2A;
+    min-height: 100vh;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #EFECE2;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #C7C2B2;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #A8A291;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
