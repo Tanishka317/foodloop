@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { StorageAdapter } from '../../services/storageAdapter';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import Badge from '../../components/common/Badge';
@@ -11,7 +12,10 @@ export default function DonorRequestsPage() {
   const { requests, donations, currentOrg, approveRequest, rejectRequest } = useApp();
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const myDonationIds = donations.filter(d => d.donorId === currentOrg?.id).map(d => d.id);
+  const dbOrgId = currentOrg?.databaseOrgId || StorageAdapter.getDatabaseOrgId(currentOrg);
+  const myDonationIds = donations.filter(
+    (d) => d.donorId === currentOrg?.id || (dbOrgId && d.donorId === dbOrgId)
+  ).map(d => d.id);
   const myRequests = requests.filter(r => myDonationIds.includes(r.donationId));
 
   const filtered = myRequests.filter(r => {

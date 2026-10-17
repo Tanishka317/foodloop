@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { StorageAdapter } from '../../services/storageAdapter';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import EmptyState from '../../components/common/EmptyState';
@@ -9,7 +10,10 @@ import { Truck, KeyRound, Building2, Phone, CheckCircle2 } from 'lucide-react';
 export default function DonorPickupsPage() {
   const { pickups, currentOrg } = useApp();
 
-  const myPickups = pickups.filter(p => p.donorId === currentOrg?.id && p.status !== 'delivered');
+  const dbOrgId = currentOrg?.databaseOrgId || StorageAdapter.getDatabaseOrgId(currentOrg);
+  const myPickups = pickups.filter(
+    (p) => (p.donorId === currentOrg?.id || (dbOrgId && p.donorId === dbOrgId)) && p.status !== 'delivered'
+  );
 
   return (
     <div className="space-y-6">

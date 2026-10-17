@@ -148,12 +148,24 @@ export function AppProvider({ children }) {
   const createDonation = async (donationData) => {
     console.log("Current organization:", currentOrg);
     try {
+      if (!currentOrg) {
+        throw new Error(
+          'No active organization found. Please switch to a donor profile.'
+        );
+      }
+
+      const dbDonorId = StorageAdapter.getDatabaseOrgId(currentOrg);
+
+      if (!dbDonorId) {
+        throw new Error(
+          `Cannot create donation: No valid database organization mapping found for active donor "${currentOrg.name}" (${currentOrg.id}).`
+        );
+      }
+
       const created = await donationService.createDonation({
         ...donationData,
-        donorId: 'db208851-cc8d-440b-b0ea-c84dccd67c53',
-        donorName: currentOrg
-          ? currentOrg.name
-          : 'The Daily Harvest Bakery & Kitchen'
+        donorId: dbDonorId,
+        donorName: currentOrg.name
       });
 
       setDonations((prev) => [created, ...prev]);
@@ -162,7 +174,7 @@ export function AppProvider({ children }) {
         id: `notif_${Date.now()}`,
         role: 'ngo',
         title: 'New Surplus Donation Posted',
-        message: `${created.donorName} listed ${created.quantity} ${created.unit} of "${created.title}".`,
+        message: `${created.donorName || currentOrg.name} listed ${created.quantity} ${created.unit} of "${created.title}".`,
         time: 'Just now',
         unread: true,
         link: `/app/ngo/donations/${created.id}`

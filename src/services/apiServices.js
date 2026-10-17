@@ -92,9 +92,15 @@ export const donationService = {
   },
 
   async createDonation(donationData) {
+    const donorOrgId =
+      donationData.donor_organization_id ?? donationData.donorId;
+
+    if (!donorOrgId) {
+      throw new Error("Donor organization ID is required to create a donation");
+    }
+
     const payload = {
-      donor_organization_id:
-        donationData.donor_organization_id ?? donationData.donorId,
+      donor_organization_id: donorOrgId,
       title: donationData.title,
       description: donationData.description,
       category: donationData.category,
@@ -155,6 +161,7 @@ export const donationService = {
       status: d.status,
       workflowType: d.workflow_type,
       donorId: d.donor_organization_id,
+      donorName: donationData.donorName || "Food Donor",
       dietaryTags: d.dietary_tags || [],
       allergens: d.allergens || [],
     };

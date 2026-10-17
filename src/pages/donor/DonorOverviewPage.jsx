@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
+import { StorageAdapter } from '../../services/storageAdapter';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import Badge from '../../components/common/Badge';
@@ -20,7 +21,10 @@ import {
 export default function DonorOverviewPage() {
   const { donations, requests, pickups, currentOrg, approveRequest, rejectRequest } = useApp();
 
-  const myDonations = donations.filter(d => d.donorId === currentOrg?.id);
+  const dbOrgId = currentOrg?.databaseOrgId || StorageAdapter.getDatabaseOrgId(currentOrg);
+  const myDonations = donations.filter(
+    (d) => d.donorId === currentOrg?.id || (dbOrgId && d.donorId === dbOrgId)
+  );
   const activeDonations = myDonations.filter(d => d.status === 'published');
   
   // Incoming requests for my donations

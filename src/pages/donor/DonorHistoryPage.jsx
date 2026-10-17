@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { StorageAdapter } from '../../services/storageAdapter';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Button from '../../components/common/Button';
@@ -9,7 +10,10 @@ import { Download } from 'lucide-react';
 export default function DonorHistoryPage() {
   const { donations, currentOrg, addToast } = useApp();
 
-  const completed = donations.filter(d => d.donorId === currentOrg?.id && d.status === 'completed');
+  const dbOrgId = currentOrg?.databaseOrgId || StorageAdapter.getDatabaseOrgId(currentOrg);
+  const completed = donations.filter(
+    (d) => (d.donorId === currentOrg?.id || (dbOrgId && d.donorId === dbOrgId)) && d.status === 'completed'
+  );
 
   return (
     <div className="space-y-6">

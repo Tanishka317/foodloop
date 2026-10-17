@@ -1,13 +1,13 @@
 import {
   INITIAL_USERS,
   INITIAL_ORGANIZATIONS,
+  ORGANIZATION_DATABASE_MAPPING,
   INITIAL_DONATIONS,
   INITIAL_REQUESTS,
   INITIAL_PICKUPS,
   INITIAL_NOTIFICATIONS,
-  INITIAL_REPORTS,
-  PLATFORM_IMPACT_STATS
-} from '../data/fixtures';
+  INITIAL_REPORTS
+} from '../data/fixtures.js';
 
 const STORAGE_KEYS = {
   USERS: 'foodloop_users_v1',
@@ -19,6 +19,46 @@ const STORAGE_KEYS = {
   REPORTS: 'foodloop_reports_v1',
   ACTIVE_ROLE: 'foodloop_active_role_v1'
 };
+
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export function isValidUuid(val) {
+  return typeof val === 'string' && UUID_REGEX.test(val.trim());
+}
+
+/**
+ * Resolves a real PostgreSQL database UUID for an organization object or organization ID string.
+ * Returns null if no valid database UUID mapping can be resolved.
+ */
+export function resolveDatabaseOrgId(orgOrId) {
+  if (!orgOrId) return null;
+
+  if (typeof orgOrId === 'object') {
+    if (isValidUuid(orgOrId.databaseOrgId)) {
+      return orgOrId.databaseOrgId.trim();
+    }
+    if (isValidUuid(orgOrId.id)) {
+      return orgOrId.id.trim();
+    }
+    if (orgOrId.id && isValidUuid(ORGANIZATION_DATABASE_MAPPING[orgOrId.id])) {
+      return ORGANIZATION_DATABASE_MAPPING[orgOrId.id];
+    }
+    return null;
+  }
+
+  if (typeof orgOrId === 'string') {
+    const trimmed = orgOrId.trim();
+    if (isValidUuid(trimmed)) {
+      return trimmed;
+    }
+    if (isValidUuid(ORGANIZATION_DATABASE_MAPPING[trimmed])) {
+      return ORGANIZATION_DATABASE_MAPPING[trimmed];
+    }
+    return null;
+  }
+
+  return null;
+}
 
 function getFromStorage(key, fallback) {
   try {
@@ -42,8 +82,19 @@ export const StorageAdapter = {
   getUsers: () => getFromStorage(STORAGE_KEYS.USERS, INITIAL_USERS),
   saveUsers: (users) => saveToStorage(STORAGE_KEYS.USERS, users),
 
-  getOrganizations: () => getFromStorage(STORAGE_KEYS.ORGANIZATIONS, INITIAL_ORGANIZATIONS),
+  getOrganizations: () => {
+    const orgs = getFromStorage(STORAGE_KEYS.ORGANIZATIONS, INITIAL_ORGANIZATIONS);
+    return orgs.map((org) => {
+      const mappedId = ORGANIZATION_DATABASE_MAPPING[org.id];
+      if (mappedId && !org.databaseOrgId) {
+        return { ...org, databaseOrgId: mappedId };
+      }
+      return org;
+    });
+  },
   saveOrganizations: (orgs) => saveToStorage(STORAGE_KEYS.ORGANIZATIONS, orgs),
+
+  getDatabaseOrgId: resolveDatabaseOrgId,
 
   getDonations: () => getFromStorage(STORAGE_KEYS.DONATIONS, INITIAL_DONATIONS),
   saveDonations: (donations) => saveToStorage(STORAGE_KEYS.DONATIONS, donations),

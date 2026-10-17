@@ -48,9 +48,18 @@ export const INITIAL_USERS = [
   }
 ];
 
+/**
+ * Explicit mapping between frontend demo organization IDs and verified PostgreSQL UUIDs.
+ * Used to resolve real database IDs for active organizations during database-backed operations.
+ */
+export const ORGANIZATION_DATABASE_MAPPING = {
+  org_donor_1: 'db208851-cc8d-440b-b0ea-c84dccd67c53'
+};
+
 export const INITIAL_ORGANIZATIONS = [
   {
     id: 'org_donor_1',
+    databaseOrgId: 'db208851-cc8d-440b-b0ea-c84dccd67c53',
     name: 'The Daily Harvest Bakery & Kitchen',
     type: 'donor',
     donorType: 'Bakery & Deli',
